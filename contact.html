@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>contact</title>
+<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="nav">
+      <a href="/">accueil</a>
+      <a href="/books/">livres</a>
+      <a href="/contact.html">contact</a>
+    </nav>
+    <h1>contact</h1>
+    <p>Envoyez-moi un message :</p>
+    <form action="https://formspree.io/f/your-id" method="POST">
+      <label>Nom<input name="name" required></label>
+      <label>Email<input name="email" type="email" required></label>
+      <label>Message<textarea name="message" rows="6" required></textarea></label>
+      <button type="submit">envoyer</button>
+    </form>
+    <p class="notice">Remplacez l’URL Formspree par la vôtre (ou dites-moi de la retirer).</p>
+    <footer>© 2025</footer>
+  </div>
+</body>
+</html>
