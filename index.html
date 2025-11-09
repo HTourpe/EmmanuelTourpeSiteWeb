@@ -4,18 +4,63 @@
   <meta charset="utf-8">
   <title>Emmanuel Tourpe – Livres</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Swiper CSS (carousel) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- Main styles -->
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <header><h1>Emmanuel Tourpe</h1></header>
-  <main>
-    <section id="books">
-      <h2>Livres</h2>
-      <div id="books-grid"></div>
-    </section>
-  </main>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="/js/main.js"></script>
-</body>
-</html>
+
+  <!-- header / navigation -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Emmanuel Tourpe</div>
+      <nav class="main-nav">
+        <a href="#featured">Livres phares</a>
+        <a href="#catalog">Tous les livres</a>
+        <a href="#about">À propos</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- hero with parallax background -->
+  <section class="hero" data-parallax>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>Philosophie, théologie, communication.</h1>
+      <p>Un parcours intellectuel pour penser Dieu, l’Église et le monde contemporain.</p>
+      <button class="btn-primary" onclick="document.getElementById('featured').scrollIntoView({behavior: 'smooth'})">
+        Découvrir les livres
+      </button>
+    </div>
+  </section>
+
+  <!-- featured books carousel -->
+  <section id="featured" class="section">
+    <div class="container">
+      <h2>Livres récents et incontournables</h2>
+      <p class="section-subtitle">Une sélection des ouvrages les plus récents et les plus marquants.</p>
+
+      <div class="swiper featured-swiper">
+        <div class="swiper-wrapper" id="featured-swiper-wrapper"></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- thematic parallax strip -->
+  <section class="parallax-strip parallax-strip-1" data-parallax>
+    <div class="container parallax-content">
+      <h3>Dieu et la question du sens</h3>
+      <p>Des ouvrages qui affrontent la question de Dieu dans le langage et les défis d’aujourd’hui.</p>
+    </div>
+  </section>
+
+  <!-- catalog grid -->
+  <section id="catalog" class="section">
+    <div class="container">
+      <h2>Tous les livres</h2>
