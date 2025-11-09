@@ -343,6 +343,51 @@ body {
   margin-top: 14px;
   color: #444a63;
 }
+/* ------------------------------------------------------
+   Author photo (About section)
+   ------------------------------------------------------ */
+.about-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.about-photo img {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;              /* makes it a perfect circle */
+  object-fit: cover;               /* crops nicely */
+  border: 4px solid var(--accent); /* subtle gold border */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-photo img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.about-text {
+  flex: 1 1 400px;
+  max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  .about-photo img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .about-layout {
+    text-align: center;
+  }
+
+  .about-text {
+    max-width: 100%;
+  }
+}
 
 /* ------------------------------------------------------
    Footer
