@@ -1,123 +1,222 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title>Emmanuel Tourpe – Livres</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+// ------------------------------------------------------
+// Utility functions
+// ------------------------------------------------------
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+function parseCsvDate(dateStr) {
+  if (!dateStr) return null;
+  const parts = dateStr.split('/');
+  const m = parseInt(parts[0], 10);
+  const d = parseInt(parts[1], 10);
+  let y = parseInt(parts[2], 10);
+  if (y < 100) y = 2000 + y;
+  return new Date(y, m - 1, d);
+}
 
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
+function formatDateFr(dateStr) {
+  const d = parseCsvDate(dateStr);
+  if (!d || isNaN(d)) return '';
+  return d.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 
-<body>
-  <!-- page transition overlay -->
-  <div id="page-transition" class="page-transition"></div>
+function truncate(text, n) {
+  if (!text) return '';
+  return text.length > n ? text.substring(0, n) + '…' : text;
+}
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">Emmanuel Tourpe</div>
-      <nav class="main-nav">
-        <a href="#featured">Livres récents</a>
-        <a href="#catalog">Tous les livres</a>
-        <a href="#about">À propos</a>
-      </nav>
-    </div>
-  </header>
+// ------------------------------------------------------
+// Global variables
+// ------------------------------------------------------
+let allBooks = [];
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <h1>Philosophie, théologie, communication.</h1>
-      <p>Un parcours intellectuel pour penser Dieu, l’Église et le monde contemporain.</p>
-      <button class="btn-primary" onclick="document.getElementById('featured').scrollIntoView({behavior: 'smooth'})">
-        Découvrir les livres
-      </button>
-    </div>
-  </section>
+// ------------------------------------------------------
+// Load and parse Books.csv
+// ------------------------------------------------------
 
-  <!-- FEATURED BOOKS CAROUSEL -->
-  <section id="featured" class="section">
-    <div class="container">
-      <h2>Livres récents</h2>
-      <p class="section-subtitle">Une sélection des ouvrages les plus récents.</p>
+async function loadBooks() {
+  try {
+    const response = await fetch('/Books.csv', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Books.csv not found');
 
-      <div class="swiper featured-swiper">
-        <div class="swiper-wrapper" id="featured-swiper-wrapper"></div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+    const text = await response.text();
+    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+    allBooks = (parsed.data || []).map(b => ({
+      Title: b.Title || '',
+      Abstract: b.Abstract || '',
+      PublicationDate: b['Publication Date'] || '',
+      PublicationUrl: b['Publication URL'] || '',
+      CoverImage: b['Cover Image'] || b['CoverImage'] || '',
+      Id: b.ID || b.Id || ''
+    }));
+
+    allBooks.sort((a, b) => {
+      return parseCsvDate(b.PublicationDate) - parseCsvDate(a.PublicationDate);
+    });
+
+    renderFeatured();
+    renderGrid();
+    populateFilter();
+  } catch (err) {
+    console.error('Erreur de chargement du fichier CSV :', err);
+  }
+}
+
+// ------------------------------------------------------
+// Render Featured Books Carousel
+// ------------------------------------------------------
+
+function renderFeatured() {
+  const featured = allBooks.slice(0, 5);
+  const wrapper = document.getElementById('featured-swiper-wrapper');
+  if (!wrapper) return;
+  wrapper.innerHTML = '';
+
+  featured.forEach(book => {
+    const slide = document.createElement('div');
+    slide.className = 'swiper-slide';
+
+    const bookId = book.Id;
+    const detailUrl = bookId ? `/book.html?id=${encodeURIComponent(bookId)}` : (book.PublicationUrl || '#');
+
+    slide.innerHTML = `
+      <div class="featured-card">
+        <div class="featured-cover-wrap">
+          <a href="${detailUrl}" data-book-link class="featured-cover-link">
+            <img src="${book.CoverImage}" alt="${book.Title}">
+          </a>
+        </div>
+        <div class="featured-meta">
+          <h3>${book.Title}</h3>
+          <p class="book-date">${formatDateFr(book.PublicationDate)}</p>
+          <p>${truncate(book.Abstract, 200)}</p>
+          ${
+            book.PublicationUrl
+              ? `<a href="${book.PublicationUrl}" target="_blank" rel="noopener" class="featured-link">
+                   Voir sur l'éditeur
+                 </a>`
+              : ''
+          }
+        </div>
       </div>
-    </div>
-  </section>
+    `;
+    wrapper.appendChild(slide);
+  });
 
-  <!-- PARALLAX (fixed) STRIP 1 -->
-  <section class="parallax-strip parallax-strip-1">
-    <div class="container parallax-content">
-      <h3>Dieu et la question du sens</h3>
-      <p>Des ouvrages qui affrontent la question de Dieu dans le langage et les défis d’aujourd’hui.</p>
-    </div>
-  </section>
+  new Swiper('.featured-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    loop: true,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+  });
+}
 
-  <!-- CATALOG GRID -->
-  <section id="catalog" class="section">
-    <div class="container">
-      <h2>Tous les livres</h2>
-      <p class="section-subtitle">Parcourez l’ensemble des publications, triées par date de parution.</p>
+// ------------------------------------------------------
+// Render Full Book Catalog Grid
+// ------------------------------------------------------
 
-      <div class="catalog-controls">
-        <label>
-          Filtrer par année&nbsp;:
-          <select id="year-filter">
-            <option value="all">Toutes</option>
-          </select>
-        </label>
-      </div>
+function renderGrid(books = allBooks) {
+  const container = document.getElementById('books-grid');
+  if (!container) return;
+  container.innerHTML = '';
 
-      <div id="books-grid" class="books-grid"></div>
-    </div>
-  </section>
+  books.forEach(book => {
+    const card = document.createElement('div');
+    card.className = 'book-card';
 
-  <!-- PARALLAX (fixed) STRIP 2 -->
-  <section class="parallax-strip parallax-strip-2">
-    <div class="container parallax-content">
-      <h3>Communication, Église, société</h3>
-      <p>Une réflexion sur la parole, les médias, la communauté et la vie publique.</p>
-    </div>
-  </section>
+    const bookId = book.Id;
+    const detailUrl = bookId ? `/book.html?id=${encodeURIComponent(bookId)}` : (book.PublicationUrl || '#');
 
-  <!-- ABOUT SECTION -->
-  <section id="about" class="section section-light">
-    <div class="container about-layout">
-      <div class="about-photo">
-        <img src="/data/images/EmmanuelTourpePhoto1.jpeg" alt="Photo d’Emmanuel Tourpe">
-      </div>
-      <div class="about-text">
-        <h2>À propos d’Emmanuel Tourpe</h2>
-        <p>
-          Philosophe et théologien, Emmanuel Tourpe explore la question de Dieu, la communication
-          et la vie ecclésiale dans un monde fragmenté. Ses livres tissent un lien entre tradition
-          et modernité, entre réflexion profonde et parole accessible.
-        </p>
-        <p class="quote">« La pensée n’est pas un luxe, mais une manière d’aimer. »</p>
-      </div>
-    </div>
-  </section>
+    card.innerHTML = `
+      <a href="${detailUrl}" data-book-link class="book-cover-link">
+        <img src="${book.CoverImage}" alt="${book.Title}">
+      </a>
+      <h3>${book.Title}</h3>
+      <p>${formatDateFr(book.PublicationDate)}</p>
+      <p>${truncate(book.Abstract, 180)}</p>
+      ${
+        book.PublicationUrl
+          ? `<a href="${book.PublicationUrl}" target="_blank" rel="noopener">
+               Voir sur l'éditeur
+             </a>`
+          : ''
+      }
+    `;
+    container.appendChild(card);
+  });
+}
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div>© <span id="year-span"></span> Emmanuel Tourpe</div>
-    </div>
-  </footer>
+// ------------------------------------------------------
+// Populate Year Filter Dropdown
+// ------------------------------------------------------
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script src="/js/main.js"></script>
-</body>
-</html>
+function populateFilter() {
+  const select = document.getElementById('year-filter');
+  if (!select) return;
+
+  const years = [
+    ...new Set(
+      allBooks
+        .map(b => parseCsvDate(b.PublicationDate)?.getFullYear())
+        .filter(Boolean)
+    )
+  ].sort((a, b) => b - a);
+
+  years.forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener('change', e => {
+    const year = e.target.value;
+    if (year === 'all') {
+      renderGrid(allBooks);
+    } else {
+      const filtered = allBooks.filter(
+        b => parseCsvDate(b.PublicationDate)?.getFullYear() == year
+      );
+      renderGrid(filtered);
+    }
+  });
+}
+
+// ------------------------------------------------------
+// Page transition on navigation to book.html
+// ------------------------------------------------------
+
+function setupPageTransition() {
+  const overlay = document.getElementById('page-transition');
+  if (!overlay) return;
+
+  document.addEventListener('click', event => {
+    const link = event.target.closest('[data-book-link]');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+
+    event.preventDefault();
+
+    overlay.classList.add('is-active');
+    setTimeout(() => {
+      window.location.href = href;
+    }, 350);
+  });
+}
+
+// ------------------------------------------------------
+// Initialization on page load
+// ------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+  const yearSpan = document.getElementById('year-span');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  setupPageTransition();
+  loadBooks();
+});
