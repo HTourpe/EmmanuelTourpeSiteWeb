@@ -1,178 +1,123 @@
-// -----------------------------
-// Utility functions
-// -----------------------------
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Emmanuel Tourpe – Livres</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-function parseCsvDate(dateStr) {
-  if (!dateStr) return null;
-  const parts = dateStr.split('/');
-  const m = parseInt(parts[0], 10);
-  const d = parseInt(parts[1], 10);
-  let y = parseInt(parts[2], 10);
-  if (y < 100) y = 2000 + y;
-  return new Date(y, m - 1, d);
-}
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-function formatDateFr(dateStr) {
-  const d = parseCsvDate(dateStr);
-  if (!d || isNaN(d)) return '';
-  return d.toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
 
-function truncate(text, n) {
-  if (!text) return '';
-  return text.length > n ? text.substring(0, n) + '…' : text;
-}
+<body>
+  <!-- page transition overlay -->
+  <div id="page-transition" class="page-transition"></div>
 
-// -----------------------------
-// Global variables
-// -----------------------------
-let allBooks = [];
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Emmanuel Tourpe</div>
+      <nav class="main-nav">
+        <a href="#featured">Livres récents</a>
+        <a href="#catalog">Tous les livres</a>
+        <a href="#about">À propos</a>
+      </nav>
+    </div>
+  </header>
 
-// -----------------------------
-// Data loading
-// -----------------------------
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>Philosophie, théologie, communication.</h1>
+      <p>Un parcours intellectuel pour penser Dieu, l’Église et le monde contemporain.</p>
+      <button class="btn-primary" onclick="document.getElementById('featured').scrollIntoView({behavior: 'smooth'})">
+        Découvrir les livres
+      </button>
+    </div>
+  </section>
 
-async function loadBooks() {
-  try {
-    // Fetch the CSV file (served from /public/ on Cloudflare Pages)
-    const response = await fetch('/Books.csv', { cache: 'no-store' });
-    if (!response.ok) throw new Error('CSV not found');
-    const text = await response.text();
+  <!-- FEATURED BOOKS CAROUSEL -->
+  <section id="featured" class="section">
+    <div class="container">
+      <h2>Livres récents</h2>
+      <p class="section-subtitle">Une sélection des ouvrages les plus récents.</p>
 
-    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-    allBooks = parsed.data || [];
+      <div class="swiper featured-swiper">
+        <div class="swiper-wrapper" id="featured-swiper-wrapper"></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+    </div>
+  </section>
 
-    // Sort by date descending
-    allBooks.sort((a, b) => {
-      return parseCsvDate(b['Publication Date']) - parseCsvDate(a['Publication Date']);
-    });
+  <!-- PARALLAX (fixed) STRIP 1 -->
+  <section class="parallax-strip parallax-strip-1">
+    <div class="container parallax-content">
+      <h3>Dieu et la question du sens</h3>
+      <p>Des ouvrages qui affrontent la question de Dieu dans le langage et les défis d’aujourd’hui.</p>
+    </div>
+  </section>
 
-    renderFeatured();
-    renderGrid();
-    populateFilter();
-  } catch (err) {
-    console.error('Error loading Books.csv:', err);
-  }
-}
+  <!-- CATALOG GRID -->
+  <section id="catalog" class="section">
+    <div class="container">
+      <h2>Tous les livres</h2>
+      <p class="section-subtitle">Parcourez l’ensemble des publications, triées par date de parution.</p>
 
-// -----------------------------
-// Rendering functions
-// -----------------------------
+      <div class="catalog-controls">
+        <label>
+          Filtrer par année&nbsp;:
+          <select id="year-filter">
+            <option value="all">Toutes</option>
+          </select>
+        </label>
+      </div>
 
-function renderFeatured() {
-  const featured = allBooks.slice(0, 5);
-  const wrapper = document.getElementById('featured-swiper-wrapper');
-  if (!wrapper) return;
-  wrapper.innerHTML = '';
+      <div id="books-grid" class="books-grid"></div>
+    </div>
+  </section>
 
-  featured.forEach(book => {
-    const slide = document.createElement('div');
-    slide.className = 'swiper-slide';
-    slide.innerHTML = `
-      <div class="featured-card">
-        <div class="featured-cover-wrap">
-          <img src="${book['Cover Image'] || book['CoverImage'] || ''}" alt="${book.Title}">
-        </div>
-        <div class="featured-meta">
-          <h3>${book.Title}</h3>
-          <p class="book-date">${formatDateFr(book['Publication Date'])}</p>
-          <p>${truncate(book.Abstract || '', 200)}</p>
-          <a href="${book['Publication URL']}" target="_blank" rel="noopener" class="featured-link">
-            Voir sur l'éditeur
-          </a>
-        </div>
-      </div>`;
-    wrapper.appendChild(slide);
-  });
+  <!-- PARALLAX (fixed) STRIP 2 -->
+  <section class="parallax-strip parallax-strip-2">
+    <div class="container parallax-content">
+      <h3>Communication, Église, société</h3>
+      <p>Une réflexion sur la parole, les médias, la communauté et la vie publique.</p>
+    </div>
+  </section>
 
-  // Initialize Swiper carousel
-  new Swiper('.featured-swiper', {
-    slidesPerView: 1,
-    spaceBetween: 24,
-    loop: true,
-    pagination: { el: '.swiper-pagination', clickable: true },
-    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-  });
-}
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section section-light">
+    <div class="container about-layout">
+      <div class="about-photo">
+        <img src="/data/images/EmmanuelTourpePhoto1.jpeg" alt="Photo d’Emmanuel Tourpe">
+      </div>
+      <div class="about-text">
+        <h2>À propos d’Emmanuel Tourpe</h2>
+        <p>
+          Philosophe et théologien, Emmanuel Tourpe explore la question de Dieu, la communication
+          et la vie ecclésiale dans un monde fragmenté. Ses livres tissent un lien entre tradition
+          et modernité, entre réflexion profonde et parole accessible.
+        </p>
+        <p class="quote">« La pensée n’est pas un luxe, mais une manière d’aimer. »</p>
+      </div>
+    </div>
+  </section>
 
-function renderGrid(books = allBooks) {
-  const container = document.getElementById('books-grid');
-  if (!container) return;
-  container.innerHTML = '';
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year-span"></span> Emmanuel Tourpe</div>
+    </div>
+  </footer>
 
-  books.forEach(book => {
-    const card = document.createElement('div');
-    card.className = 'book-card';
-    card.innerHTML = `
-      <img src="${book['Cover Image'] || book['CoverImage'] || ''}" alt="${book.Title}">
-      <h3>${book.Title}</h3>
-      <p>${formatDateFr(book['Publication Date'])}</p>
-      <p>${truncate(book.Abstract || '', 180)}</p>
-      <a href="${book['Publication URL']}" target="_blank" rel="noopener">
-        Voir sur l'éditeur
-      </a>`;
-    container.appendChild(card);
-  });
-}
-
-function populateFilter() {
-  const select = document.getElementById('year-filter');
-  if (!select) return;
-  const years = [
-    ...new Set(
-      allBooks.map(b => parseCsvDate(b['Publication Date'])?.getFullYear()).filter(Boolean)
-    )
-  ].sort((a, b) => b - a);
-
-  years.forEach(y => {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y;
-    select.appendChild(opt);
-  });
-
-  select.addEventListener('change', e => {
-    const year = e.target.value;
-    if (year === 'all') {
-      renderGrid(allBooks);
-    } else {
-      const filtered = allBooks.filter(
-        b => parseCsvDate(b['Publication Date'])?.getFullYear() == year
-      );
-      renderGrid(filtered);
-    }
-  });
-}
-
-// -----------------------------
-// Parallax scrolling
-// -----------------------------
-//function initParallax() {
- // const strips = document.querySelectorAll('.parallax-strip');
- // window.addEventListener('scroll', () => {
- //   const scrollY = window.scrollY;
- //   strips.forEach(el => {
- //     const rect = el.getBoundingClientRect();
- //     const offset = rect.top * 0.4;
-  //    el.style.backgroundPosition = `center ${offset}px`;
-  //  });
- // });
-//}
-
-
-
-
-
-// -----------------------------
-// Initialization
-// -----------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  const yearSpan = document.getElementById('year-span');
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-  //initParallax();
-  loadBooks();
-});
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
