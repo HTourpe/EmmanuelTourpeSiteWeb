@@ -1,21 +1,53 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>livre</title>
-<link rel="stylesheet" href="/assets/styles.css">
+  <meta charset="utf-8">
+  <title>Emmanuel Tourpe – Livre</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
-  <div class="wrapper">
-    <nav class="nav">
-      <a href="/">accueil</a>
-      <a href="/books/">livres</a>
-      <a href="/contact.html">contact</a>
-    </nav>
-    <a href="/books/">&larr; retour au catalogue</a>
-    <article id="book" style="margin-top:16px;"></article>
-    <footer>© 2025</footer>
-  </div>
-<script type="module" src="/assets/book.js"></script>
+  <!-- page transition overlay -->
+  <div id="page-transition" class="page-transition is-active"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">Emmanuel Tourpe</div>
+      <nav class="main-nav">
+        <a href="/">Livres</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BOOK DETAIL MAIN -->
+  <main class="section book-detail-main">
+    <div class="container book-detail-layout">
+      <div class="book-detail-cover">
+        <img id="book-cover" src="" alt="">
+      </div>
+      <div class="book-detail-meta">
+        <h1 id="book-title" class="book-detail-title"></h1>
+        <p id="book-date" class="book-detail-date"></p>
+        <p id="book-abstract" class="book-detail-abstract"></p>
+        <a id="book-publisher-link" class="book-detail-publisher" href="#" target="_blank" rel="noopener"></a>
+        <br>
+        <a href="/" class="book-detail-back">← Retour aux livres</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year-span"></span> Emmanuel Tourpe</div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="/js/book.js"></script>
 </body>
 </html>
