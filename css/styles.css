@@ -1,1 +1,205 @@
-body{font-family:Arial;background:#060915;color:#fff;margin:0;padding:2rem;}h1{color:#f4b124;}
+:root {
+  --bg-dark: #060915;
+  --bg-light: #f7f7fa;
+  --accent: #f4b124;
+  --text-main: #f5f5f7;
+  --text-muted: #999fb4;
+  --text-dark: #1d2130;
+  --border-soft: rgba(255, 255, 255, 0.08);
+}
+
+/* basic reset */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* container */
+.container {
+  width: min(1200px, 90vw);
+  margin: 0 auto;
+}
+
+.section {
+  padding: 80px 0;
+}
+
+.section h2 {
+  font-size: 2.2rem;
+}
+
+/* header */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.logo {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.main-nav a {
+  color: var(--text-muted);
+  margin-left: 24px;
+  text-decoration: none;
+}
+
+.main-nav a:hover {
+  color: #fff;
+}
+
+/* hero */
+.hero {
+  height: 100vh;
+  background: radial-gradient(circle at top left, #27386b 0, transparent 45%),
+              radial-gradient(circle at bottom right, #8a4f1c 0, transparent 50%),
+              var(--bg-dark);
+  background-attachment: fixed;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 650px;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* featured carousel */
+.featured-swiper {
+  margin-top: 32px;
+  padding-bottom: 40px;
+}
+
+.featured-card {
+  display: flex;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.featured-cover-wrap img {
+  max-width: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.featured-meta h3 {
+  margin: 0;
+  color: var(--accent);
+}
+
+.book-date {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* parallax strips */
+.parallax-strip {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 80px 0;
+}
+
+.parallax-strip-1 {
+  background-image: linear-gradient(to right, #141836, #261a2a);
+}
+
+.parallax-strip-2 {
+  background-image: linear-gradient(to right, #1a232f, #291b10);
+}
+
+/* books grid */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.book-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.book-card img {
+  max-width: 100%;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.book-card h3 {
+  color: var(--accent);
+  margin: 0.5rem 0;
+}
+
+.book-card p {
+  color: var(--text-muted);
+}
+
+/* about */
+.section-light {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+.quote {
+  font-style: italic;
+}
+
+/* footer */
+.site-footer {
+  background: #050712;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px 0;
+}
