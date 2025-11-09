@@ -1,3 +1,6 @@
+/* ------------------------------------------------------
+   Global variables
+   ------------------------------------------------------ */
 :root {
   --bg-dark: #060915;
   --bg-light: #f7f7fa;
@@ -9,7 +12,9 @@
   --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* global styles */
+/* ------------------------------------------------------
+   Global styles
+   ------------------------------------------------------ */
 *,
 *::before,
 *::after {
@@ -18,13 +23,13 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg-dark);
   color: var(--text-main);
   line-height: 1.6;
+  scroll-behavior: smooth;
 }
 
-/* container */
 .container {
   width: min(1200px, 90vw);
   margin: 0 auto;
@@ -45,7 +50,9 @@ body {
   font-size: 1rem;
 }
 
-/* header */
+/* ------------------------------------------------------
+   Header and navigation
+   ------------------------------------------------------ */
 .site-header {
   position: fixed;
   top: 0;
@@ -68,6 +75,7 @@ body {
   color: var(--accent);
   text-transform: uppercase;
   font-size: 1rem;
+  letter-spacing: 0.08em;
 }
 
 .main-nav a {
@@ -82,7 +90,9 @@ body {
   color: #fff;
 }
 
-/* hero */
+/* ------------------------------------------------------
+   Hero section
+   ------------------------------------------------------ */
 .hero {
   position: relative;
   height: 100vh;
@@ -92,17 +102,17 @@ body {
   align-items: center;
   justify-content: center;
   text-align: left;
-  background:
-    radial-gradient(circle at top left, #27386b 0, transparent 45%),
-    radial-gradient(circle at bottom right, #8a4f1c 0, transparent 50%),
-    var(--bg-dark);
+
+  background-image: url("https://static.wixstatic.com/media/3ac46f_c3b6b6e10438460b86249392ab90eedb~mv2.jpg");
   background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom right, rgba(6, 9, 21, 0.8), rgba(6, 9, 21, 0.4));
+  background: linear-gradient(to bottom right, rgba(6, 9, 21, 0.85), rgba(6, 9, 21, 0.5));
 }
 
 .hero-content {
@@ -142,7 +152,9 @@ body {
   box-shadow: 0 12px 26px rgba(244, 177, 36, 0.4);
 }
 
-/* featured carousel */
+/* ------------------------------------------------------
+   Featured books carousel
+   ------------------------------------------------------ */
 .featured-swiper {
   margin-top: 32px;
   padding-bottom: 40px;
@@ -205,34 +217,56 @@ body {
   text-decoration: underline;
 }
 
-/* parallax strips */
+/* ------------------------------------------------------
+   Parallax background sections
+   ------------------------------------------------------ */
 .parallax-strip {
   position: relative;
   padding: 80px 0;
+  color: white;
+
+  background-image: url("https://static.wixstatic.com/media/3ac46f_c3b6b6e10438460b86249392ab90eedb~mv2.jpg");
   background-attachment: fixed;
   background-size: cover;
-  background-position: center;
-  color: white;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
-.parallax-strip-1 {
-  background-image: linear-gradient(to right, #141836, #261a2a);
-}
-
-.parallax-strip-2 {
-  background-image: linear-gradient(to right, #1a232f, #291b10);
+/* overlay for text readability */
+.parallax-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 9, 21, 0.75),
+    rgba(6, 9, 21, 0.55)
+  );
+  pointer-events: none;
 }
 
 .parallax-content {
+  position: relative;
+  z-index: 1;
   max-width: 700px;
+  margin: 0 auto;
+  text-align: left;
 }
 
 .parallax-content h3 {
-  font-size: 1.6rem;
-  margin-bottom: 0.3rem;
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
 }
 
-/* catalog grid */
+.parallax-content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+/* ------------------------------------------------------
+   Catalog grid (all books)
+   ------------------------------------------------------ */
 .catalog-controls {
   margin-bottom: 20px;
   font-size: 0.9rem;
@@ -296,7 +330,9 @@ body {
   text-decoration: underline;
 }
 
-/* about */
+/* ------------------------------------------------------
+   About section
+   ------------------------------------------------------ */
 .section-light {
   background: var(--bg-light);
   color: var(--text-dark);
@@ -308,7 +344,9 @@ body {
   color: #444a63;
 }
 
-/* footer */
+/* ------------------------------------------------------
+   Footer
+   ------------------------------------------------------ */
 .site-footer {
   background: #050712;
   color: var(--text-muted);
@@ -316,7 +354,9 @@ body {
   text-align: center;
 }
 
-/* responsive adjustments */
+/* ------------------------------------------------------
+   Responsive adjustments
+   ------------------------------------------------------ */
 @media (max-width: 900px) {
   .featured-card {
     grid-template-columns: 1fr;
@@ -332,17 +372,13 @@ body {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .books-grid {
     grid-template-columns: 1fr;
   }
 
-  .hero {
-    text-align: left;
-    background-attachment: scroll;
-  }
-
+  .hero,
   .parallax-strip {
-    background-attachment: scroll;
+    background-attachment: scroll; /* smoother on mobile */
   }
 }
