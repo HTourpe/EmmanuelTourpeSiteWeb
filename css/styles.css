@@ -6,12 +6,19 @@
   --text-muted: #999fb4;
   --text-dark: #1d2130;
   --border-soft: rgba(255, 255, 255, 0.08);
+  --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* basic reset */
+/* global styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
   background: var(--bg-dark);
   color: var(--text-main);
   line-height: 1.6;
@@ -28,7 +35,14 @@ body {
 }
 
 .section h2 {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
 /* header */
@@ -37,30 +51,31 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
   z-index: 20;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 .header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 0;
 }
 
 .logo {
   font-weight: 700;
   color: var(--accent);
-  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 1rem;
 }
 
 .main-nav a {
-  color: var(--text-muted);
   margin-left: 24px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
   text-decoration: none;
+  transition: color 0.3s;
 }
 
 .main-nav a:hover {
@@ -69,45 +84,62 @@ body {
 
 /* hero */
 .hero {
-  height: 100vh;
-  background: radial-gradient(circle at top left, #27386b 0, transparent 45%),
-              radial-gradient(circle at bottom right, #8a4f1c 0, transparent 50%),
-              var(--bg-dark);
-  background-attachment: fixed;
   position: relative;
+  height: 100vh;
+  min-height: 550px;
+  color: #fff;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: left;
+  background:
+    radial-gradient(circle at top left, #27386b 0, transparent 45%),
+    radial-gradient(circle at bottom right, #8a4f1c 0, transparent 50%),
+    var(--bg-dark);
+  background-attachment: fixed;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to bottom right, rgba(6, 9, 21, 0.8), rgba(6, 9, 21, 0.4));
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
   max-width: 650px;
+  padding-top: 60px;
 }
 
 .hero h1 {
-  font-size: 2.8rem;
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  line-height: 1.2;
   margin-bottom: 1rem;
 }
 
 .hero p {
+  max-width: 520px;
   color: var(--text-muted);
+  font-size: 1rem;
   margin-bottom: 1.8rem;
 }
 
 .btn-primary {
-  background: var(--accent);
   border: none;
+  background: var(--accent);
+  color: #1a1307;
   padding: 0.8rem 1.6rem;
   border-radius: 999px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 18px rgba(244, 177, 36, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(244, 177, 36, 0.4);
 }
 
 /* featured carousel */
@@ -117,36 +149,70 @@ body {
 }
 
 .featured-card {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 28px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
   padding: 20px;
 }
 
+.featured-cover-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+}
+
 .featured-cover-wrap img {
-  max-width: 200px;
+  width: 100%;
+  height: auto;
+  max-height: 400px;
   object-fit: contain;
-  border-radius: 8px;
+  display: block;
+  border-radius: 10px;
 }
 
 .featured-meta h3 {
-  margin: 0;
+  font-size: 1.3rem;
+  margin-top: 2px;
   color: var(--accent);
 }
 
 .book-date {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.featured-meta p {
+  color: var(--text-main);
+}
+
+.featured-link {
+  display: inline-block;
+  margin-top: 0.6rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.featured-link:hover {
+  text-decoration: underline;
 }
 
 /* parallax strips */
 .parallax-strip {
+  position: relative;
+  padding: 80px 0;
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   color: white;
-  padding: 80px 0;
 }
 
 .parallax-strip-1 {
@@ -157,33 +223,77 @@ body {
   background-image: linear-gradient(to right, #1a232f, #291b10);
 }
 
-/* books grid */
+.parallax-content {
+  max-width: 700px;
+}
+
+.parallax-content h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.3rem;
+}
+
+/* catalog grid */
+.catalog-controls {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.catalog-controls select {
+  margin-left: 6px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(8, 10, 24, 0.8);
+  color: var(--text-main);
+}
+
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
 }
 
 .book-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
+  border: 1px solid var(--border-soft);
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .book-card img {
-  max-width: 100%;
-  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  max-height: 360px;
   object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
 
 .book-card h3 {
+  font-size: 1.05rem;
   color: var(--accent);
-  margin: 0.5rem 0;
+  margin: 6px 0;
 }
 
 .book-card p {
+  font-size: 0.9rem;
   color: var(--text-muted);
+}
+
+.book-card a {
+  margin-top: auto;
+  color: var(--accent);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.book-card a:hover {
+  text-decoration: underline;
 }
 
 /* about */
@@ -194,12 +304,45 @@ body {
 
 .quote {
   font-style: italic;
+  margin-top: 14px;
+  color: #444a63;
 }
 
 /* footer */
 .site-footer {
   background: #050712;
   color: var(--text-muted);
+  padding: 20px 0 26px;
   text-align: center;
-  padding: 20px 0;
+}
+
+/* responsive adjustments */
+@media (max-width: 900px) {
+  .featured-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .featured-cover-wrap img {
+    max-width: 80%;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    text-align: left;
+    background-attachment: scroll;
+  }
+
+  .parallax-strip {
+    background-attachment: scroll;
+  }
 }
