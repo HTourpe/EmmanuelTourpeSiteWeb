@@ -152,22 +152,17 @@ function populateFilter() {
 // Parallax scrolling
 // -----------------------------
 function initParallax() {
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-
+  const strips = document.querySelectorAll('.parallax-strip');
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-
-    // raw offset (parallax speed factor)
-    const rawOffset = scrollY * 0.3;
-
-    // clamp the offset so the background stops moving after a while
-    const maxShift = 200; // tweak this value (px) to taste
-    const offset = Math.max(-maxShift, Math.min(maxShift, rawOffset));
-
-    hero.style.backgroundPosition = `center ${offset}px`;
+    strips.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top * 0.4;
+      el.style.backgroundPosition = `center ${offset}px`;
+    });
   });
 }
+
 
 
 
