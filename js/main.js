@@ -152,14 +152,23 @@ function populateFilter() {
 // Parallax scrolling
 // -----------------------------
 function initParallax() {
-  const elements = document.querySelectorAll('[data-parallax]');
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    elements.forEach(el => {
-      el.style.backgroundPositionY = `${scrollY * 0.3}px`;
-    });
+
+    // raw offset (parallax speed factor)
+    const rawOffset = scrollY * 0.3;
+
+    // clamp the offset so the background stops moving after a while
+    const maxShift = 200; // tweak this value (px) to taste
+    const offset = Math.max(-maxShift, Math.min(maxShift, rawOffset));
+
+    hero.style.backgroundPosition = `center ${offset}px`;
   });
 }
+
 
 
 
