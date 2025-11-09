@@ -2,21 +2,21 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Emmanuel Tourpe – Livres v2</title>
+  <title>Emmanuel Tourpe – Livres</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Swiper CSS (carousel) -->
+  <!-- Swiper CSS (for carousel) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  <!-- Main styles -->
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
 
-  <!-- header / navigation -->
+<body>
+  <!-- HEADER -->
   <header class="site-header">
     <div class="container header-inner">
-      <div class="logo">Emmanuel Tourpe v2</div>
+      <div class="logo">Emmanuel Tourpe</div>
       <nav class="main-nav">
         <a href="#featured">Livres phares</a>
         <a href="#catalog">Tous les livres</a>
@@ -25,7 +25,7 @@
     </div>
   </header>
 
-  <!-- hero with parallax background -->
+  <!-- HERO SECTION -->
   <section class="hero" data-parallax>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
@@ -37,7 +37,7 @@
     </div>
   </section>
 
-  <!-- featured books carousel -->
+  <!-- FEATURED BOOKS CAROUSEL -->
   <section id="featured" class="section">
     <div class="container">
       <h2>Livres récents et incontournables</h2>
@@ -52,7 +52,7 @@
     </div>
   </section>
 
-  <!-- thematic parallax strip -->
+  <!-- PARALLAX STRIP -->
   <section class="parallax-strip parallax-strip-1" data-parallax>
     <div class="container parallax-content">
       <h3>Dieu et la question du sens</h3>
@@ -60,7 +60,58 @@
     </div>
   </section>
 
-  <!-- catalog grid -->
+  <!-- CATALOG GRID -->
   <section id="catalog" class="section">
     <div class="container">
       <h2>Tous les livres</h2>
+      <p class="section-subtitle">Parcourez l’ensemble des publications, triées par date de parution.</p>
+
+      <div class="catalog-controls">
+        <label>
+          Filtrer par année&nbsp;:
+          <select id="year-filter">
+            <option value="all">Toutes</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="books-grid" class="books-grid"></div>
+    </div>
+  </section>
+
+  <!-- SECOND PARALLAX STRIP -->
+  <section class="parallax-strip parallax-strip-2" data-parallax>
+    <div class="container parallax-content">
+      <h3>Communication, Église, société</h3>
+      <p>Une réflexion sur la parole, les médias, la communauté et la vie publique.</p>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section section-light">
+    <div class="container about-layout">
+      <div>
+        <h2>À propos d’Emmanuel Tourpe</h2>
+        <p>
+          Philosophe et théologien, Emmanuel Tourpe explore la question de Dieu, la communication
+          et la vie ecclésiale dans un monde fragmenté. Ses livres tissent un lien entre tradition
+          et modernité, entre réflexion profonde et parole accessible.
+        </p>
+        <p class="quote">« La pensée n’est pas un luxe, mais une manière d’aimer. »</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year-span"></span> Emmanuel Tourpe</div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
