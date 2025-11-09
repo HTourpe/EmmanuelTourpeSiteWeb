@@ -151,17 +151,17 @@ function populateFilter() {
 // -----------------------------
 // Parallax scrolling
 // -----------------------------
-function initParallax() {
-  const strips = document.querySelectorAll('.parallax-strip');
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    strips.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      const offset = rect.top * 0.4;
-      el.style.backgroundPosition = `center ${offset}px`;
-    });
-  });
-}
+//function initParallax() {
+ // const strips = document.querySelectorAll('.parallax-strip');
+ // window.addEventListener('scroll', () => {
+ //   const scrollY = window.scrollY;
+ //   strips.forEach(el => {
+ //     const rect = el.getBoundingClientRect();
+ //     const offset = rect.top * 0.4;
+  //    el.style.backgroundPosition = `center ${offset}px`;
+  //  });
+ // });
+//}
 
 
 
