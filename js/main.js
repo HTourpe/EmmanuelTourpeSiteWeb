@@ -154,12 +154,14 @@ function populateFilter() {
 function initParallax() {
   const elements = document.querySelectorAll('[data-parallax]');
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
     elements.forEach(el => {
-      el.style.backgroundPositionY = `${scrollY * 0.3}px`;
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top * 0.4; // smaller value = more subtle
+      el.style.backgroundPosition = `center ${offset}px`;
     });
   });
 }
+
 
 // -----------------------------
 // Initialization
