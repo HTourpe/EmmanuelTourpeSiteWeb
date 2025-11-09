@@ -1,3 +1,7 @@
+// -----------------------------
+// Utility functions
+// -----------------------------
+
 function parseCsvDate(dateStr) {
   if (!dateStr) return null;
   const parts = dateStr.split('/');
@@ -19,27 +23,50 @@ function formatDateFr(dateStr) {
 }
 
 function truncate(text, n) {
+  if (!text) return '';
   return text.length > n ? text.substring(0, n) + '…' : text;
 }
 
+// -----------------------------
+// Global variables
+// -----------------------------
 let allBooks = [];
 
+// -----------------------------
+// Data loading
+// -----------------------------
+
 async function loadBooks() {
-  const response = await fetch('/data/Books.csv', { cache: 'no-store' });
-  const text = await response.text();
-  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-  allBooks = parsed.data || [];
+  try {
+    // Fetch the CSV file (served from /public/ on Cloudflare Pages)
+    const response = await fetch('/Books.csv', { cache: 'no-store' });
+    if (!response.ok) throw new Error('CSV not found');
+    const text = await response.text();
 
-  allBooks.sort((a, b) => parseCsvDate(b['Publication Date']) - parseCsvDate(a['Publication Date']));
+    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+    allBooks = parsed.data || [];
 
-  renderFeatured();
-  renderGrid();
-  populateFilter();
+    // Sort by date descending
+    allBooks.sort((a, b) => {
+      return parseCsvDate(b['Publication Date']) - parseCsvDate(a['Publication Date']);
+    });
+
+    renderFeatured();
+    renderGrid();
+    populateFilter();
+  } catch (err) {
+    console.error('Error loading Books.csv:', err);
+  }
 }
+
+// -----------------------------
+// Rendering functions
+// -----------------------------
 
 function renderFeatured() {
   const featured = allBooks.slice(0, 5);
   const wrapper = document.getElementById('featured-swiper-wrapper');
+  if (!wrapper) return;
   wrapper.innerHTML = '';
 
   featured.forEach(book => {
@@ -48,18 +75,21 @@ function renderFeatured() {
     slide.innerHTML = `
       <div class="featured-card">
         <div class="featured-cover-wrap">
-          <img src="${book['Cover Image']}" alt="${book.Title}">
+          <img src="${book['Cover Image'] || book['CoverImage'] || ''}" alt="${book.Title}">
         </div>
         <div class="featured-meta">
           <h3>${book.Title}</h3>
           <p class="book-date">${formatDateFr(book['Publication Date'])}</p>
-          <p>${truncate(book.Abstract, 200)}</p>
-          <a href="${book['Publication URL']}" target="_blank">Voir sur l’éditeur</a>
+          <p>${truncate(book.Abstract || '', 200)}</p>
+          <a href="${book['Publication URL']}" target="_blank" rel="noopener" class="featured-link">
+            Voir sur l'éditeur
+          </a>
         </div>
       </div>`;
     wrapper.appendChild(slide);
   });
 
+  // Initialize Swiper carousel
   new Swiper('.featured-swiper', {
     slidesPerView: 1,
     spaceBetween: 24,
@@ -71,20 +101,72 @@ function renderFeatured() {
 
 function renderGrid(books = allBooks) {
   const container = document.getElementById('books-grid');
+  if (!container) return;
   container.innerHTML = '';
+
   books.forEach(book => {
     const card = document.createElement('div');
     card.className = 'book-card';
     card.innerHTML = `
-      <img src="${book['Cover Image']}" alt="${book.Title}">
+      <img src="${book['Cover Image'] || book['CoverImage'] || ''}" alt="${book.Title}">
       <h3>${book.Title}</h3>
       <p>${formatDateFr(book['Publication Date'])}</p>
-      <p>${truncate(book.Abstract, 180)}</p>
-      <a href="${book['Publication URL']}" target="_blank">Voir sur l’éditeur</a>`;
+      <p>${truncate(book.Abstract || '', 180)}</p>
+      <a href="${book['Publication URL']}" target="_blank" rel="noopener">
+        Voir sur l'éditeur
+      </a>`;
     container.appendChild(card);
   });
 }
 
 function populateFilter() {
   const select = document.getElementById('year-filter');
-  const years = [...new Set(allBooks.map(b => parseCsvDate(b['Publication]()]()
+  if (!select) return;
+  const years = [
+    ...new Set(
+      allBooks.map(b => parseCsvDate(b['Publication Date'])?.getFullYear()).filter(Boolean)
+    )
+  ].sort((a, b) => b - a);
+
+  years.forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener('change', e => {
+    const year = e.target.value;
+    if (year === 'all') {
+      renderGrid(allBooks);
+    } else {
+      const filtered = allBooks.filter(
+        b => parseCsvDate(b['Publication Date'])?.getFullYear() == year
+      );
+      renderGrid(filtered);
+    }
+  });
+}
+
+// -----------------------------
+// Parallax scrolling
+// -----------------------------
+function initParallax() {
+  const elements = document.querySelectorAll('[data-parallax]');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    elements.forEach(el => {
+      el.style.backgroundPositionY = `${scrollY * 0.3}px`;
+    });
+  });
+}
+
+// -----------------------------
+// Initialization
+// -----------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const yearSpan = document.getElementById('year-span');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+  initParallax();
+  loadBooks();
+});
