@@ -173,6 +173,6 @@ function populateFilter() {
 document.addEventListener('DOMContentLoaded', () => {
   const yearSpan = document.getElementById('year-span');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-  initParallax();
+  //initParallax();
   loadBooks();
 });
