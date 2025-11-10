@@ -207,6 +207,13 @@ body {
 .book-date {
   font-size: 0.85rem;
   color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+/* debug display for Highlight in Livres récents */
+.highlight-debug {
+  font-size: 0.8rem;
+  color: #7f849c;
   margin-bottom: 0.6rem;
 }
 
@@ -321,6 +328,7 @@ body {
 /* fixed-size cover frame (grid) */
 .book-cover-frame {
   width: 100%;
+  max-width: 260px;
   aspect-ratio: 3 / 4;
   border-radius: 10px;
   overflow: hidden;
@@ -328,7 +336,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
 }
 
 .book-cover-frame img {
