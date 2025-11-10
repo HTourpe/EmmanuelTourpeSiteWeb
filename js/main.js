@@ -31,6 +31,29 @@ function truncate(text, n) {
 // Global variables
 // ------------------------------------------------------
 let allBooks = [];
+let bookCardObserver = null;
+
+// ------------------------------------------------------
+// IntersectionObserver for book card fade-in
+// ------------------------------------------------------
+
+function initBookCardObserver() {
+  if (!('IntersectionObserver' in window)) {
+    return;
+  }
+
+  bookCardObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('book-card--hidden');
+          bookCardObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+}
 
 // ------------------------------------------------------
 // Load and parse Books.csv
@@ -49,7 +72,8 @@ async function loadBooks() {
       PublicationDate: b['Publication Date'] || '',
       PublicationUrl: b['Publication URL'] || '',
       CoverImage: b['Cover Image'] || b['CoverImage'] || '',
-      Id: b.ID || b.Id || ''
+      Id: b.ID || b.Id || '',
+      Highlight: String(b.Highlight || '').trim().toLowerCase() === 'true'
     }));
 
     allBooks.sort((a, b) => {
@@ -65,14 +89,18 @@ async function loadBooks() {
 }
 
 // ------------------------------------------------------
-// Render Featured Books Carousel
+// Render Featured Books Carousel (Livres récents)
 // ------------------------------------------------------
 
 function renderFeatured() {
-  const featured = allBooks.slice(0, 5);
   const wrapper = document.getElementById('featured-swiper-wrapper');
   if (!wrapper) return;
   wrapper.innerHTML = '';
+
+  // use only highlighted books; fallback to all if none
+  const highlighted = allBooks.filter(b => b.Highlight);
+  const source = highlighted.length ? highlighted : allBooks;
+  const featured = source.slice(0, 5);
 
   featured.forEach(book => {
     const slide = document.createElement('div');
@@ -85,7 +113,9 @@ function renderFeatured() {
       <div class="featured-card">
         <div class="featured-cover-wrap">
           <a href="${detailUrl}" data-book-link class="featured-cover-link">
-            <img src="${book.CoverImage}" alt="${book.Title}">
+            <div class="featured-cover-frame">
+              <img src="${book.CoverImage}" alt="${book.Title}">
+            </div>
           </a>
         </div>
         <div class="featured-meta">
@@ -115,7 +145,7 @@ function renderFeatured() {
 }
 
 // ------------------------------------------------------
-// Render Full Book Catalog Grid
+// Render Full Book Catalog Grid (Tous les livres)
 // ------------------------------------------------------
 
 function renderGrid(books = allBooks) {
@@ -125,14 +155,16 @@ function renderGrid(books = allBooks) {
 
   books.forEach(book => {
     const card = document.createElement('div');
-    card.className = 'book-card';
+    card.className = 'book-card book-card--hidden';
 
     const bookId = book.Id;
     const detailUrl = bookId ? `/book.html?id=${encodeURIComponent(bookId)}` : (book.PublicationUrl || '#');
 
     card.innerHTML = `
       <a href="${detailUrl}" data-book-link class="book-cover-link">
-        <img src="${book.CoverImage}" alt="${book.Title}">
+        <div class="book-cover-frame">
+          <img src="${book.CoverImage}" alt="${book.Title}">
+        </div>
       </a>
       <h3>${book.Title}</h3>
       <p>${formatDateFr(book.PublicationDate)}</p>
@@ -145,7 +177,15 @@ function renderGrid(books = allBooks) {
           : ''
       }
     `;
+
     container.appendChild(card);
+
+    if (bookCardObserver) {
+      bookCardObserver.observe(card);
+    } else {
+      // no IntersectionObserver support: no animation
+      card.classList.remove('book-card--hidden');
+    }
   });
 }
 
@@ -217,6 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearSpan = document.getElementById('year-span');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
+  initBookCardObserver();
   setupPageTransition();
   loadBooks();
 });
+
