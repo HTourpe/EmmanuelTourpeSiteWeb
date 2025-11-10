@@ -66,15 +66,24 @@ async function loadBooks() {
 
     const text = await response.text();
     const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-    allBooks = (parsed.data || []).map(b => ({
-      Title: b.Title || '',
-      Abstract: b.Abstract || '',
-      PublicationDate: b['Publication Date'] || '',
-      PublicationUrl: b['Publication URL'] || '',
-      CoverImage: b['Cover Image'] || b['CoverImage'] || '',
-      Id: b.ID || b.Id || '',
-      Highlight: String(b.Highlight || '').trim().toLowerCase() === 'true'
-    }));
+    allBooks = (parsed.data || []).map(b => {
+      const highlightRaw =
+        b.Highlight ??
+        b['Highlight '] ??
+        b['highlight'] ??
+        b['highlight '] ??
+        '';
+
+      return {
+        Title: b.Title || '',
+        Abstract: b.Abstract || '',
+        PublicationDate: b['Publication Date'] || '',
+        PublicationUrl: b['Publication URL'] || '',
+        CoverImage: b['Cover Image'] || b['CoverImage'] || '',
+        Id: b.ID || b.Id || '',
+        Highlight: String(highlightRaw).trim().toLowerCase() === 'true'
+      };
+    });
 
     allBooks.sort((a, b) => {
       return parseCsvDate(b.PublicationDate) - parseCsvDate(a.PublicationDate);
@@ -121,6 +130,7 @@ function renderFeatured() {
         <div class="featured-meta">
           <h3>${book.Title}</h3>
           <p class="book-date">${formatDateFr(book.PublicationDate)}</p>
+          <p class="highlight-debug">Highlight: ${book.Highlight}</p>
           <p>${truncate(book.Abstract, 200)}</p>
           ${
             book.PublicationUrl
@@ -183,7 +193,6 @@ function renderGrid(books = allBooks) {
     if (bookCardObserver) {
       bookCardObserver.observe(card);
     } else {
-      // no IntersectionObserver support: no animation
       card.classList.remove('book-card--hidden');
     }
   });
@@ -261,4 +270,3 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPageTransition();
   loadBooks();
 });
-
