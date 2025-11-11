@@ -26,10 +26,9 @@ function initPubObserver() {
 function loadPublications(config) {
   const { csvPath, delimiter } = config;
 
-  Papa.parse(csvPath, {
+  const options = {
     header: true,
     skipEmptyLines: true,
-    delimiter: delimiter || ';',
     download: true,
     complete: results => {
       pubItems = (results.data || []).map(row => ({
@@ -40,14 +39,24 @@ function loadPublications(config) {
         reference: row.Reference || ''
       }));
 
+      // sort newest first
       pubItems.sort((a, b) => (b.year || 0) - (a.year || 0));
+
       renderPublications();
       initFilters();
     },
     error: err => {
       console.error('Erreur de chargement CSV publications :', err);
     }
-  });
+  };
+
+  // If a delimiter is explicitly provided in config, use it.
+  // Otherwise let PapaParse auto-detect the delimiter.
+  if (delimiter) {
+    options.delimiter = delimiter;
+  }
+
+  Papa.parse(csvPath, options);
 }
 
 function getFilteredItems() {
