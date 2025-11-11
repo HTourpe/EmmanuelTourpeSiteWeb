@@ -31,20 +31,25 @@ function loadPublications(config) {
     skipEmptyLines: true,
     download: true,
     complete: results => {
-      pubItems = (results.data || []).map(row => ({
-        id: row.ID || '',
-        title: row.Title || '',
-        outlet: row.Outlet || '',
-        year: parseIntOrNull(row.Year),
-        reference: row.Reference || ''
-      }));
+  pubItems = (results.data || []).map(row => ({
+    id: row.ID || '',
+    title: row.Title || '',
+    outlet: row.Outlet || '',
+    year: parseIntOrNull(row.Year),
+    reference: row.Reference || ''
+  }));
 
-      // sort newest first
-      pubItems.sort((a, b) => (b.year || 0) - (a.year || 0));
+  // sort newest first
+  pubItems.sort((a, b) => (b.year || 0) - (a.year || 0));
 
-      renderPublications();
-      initFilters();
-    },
+  // populate the select ONCE, now that we know all years
+  populateYearFilter();
+
+  // initial render + filter wiring
+  renderPublications();
+  initFilters();
+},
+
     error: err => {
       console.error('Erreur de chargement CSV publications :', err);
     }
