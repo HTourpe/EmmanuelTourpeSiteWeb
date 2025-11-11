@@ -604,7 +604,8 @@ body {
 .nav-dropdown-menu {
   position: absolute;
   right: 0;
-  top: 140%;
+  top: 100%;              /* start right under the button */
+  margin-top: 6px;        /* small visual gap, but still “inside” hover area */
   min-width: 220px;
   background: rgba(5, 7, 18, 0.97);
   border-radius: 10px;
@@ -613,10 +614,11 @@ body {
   padding: 8px 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(-2px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 30;
 }
+
 
 .nav-dropdown-menu a {
   display: block;
