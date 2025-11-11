@@ -577,3 +577,145 @@ body {
     text-align: left;
   }
 }
+
+/* ---- nav dropdown ---- */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 24px;
+}
+
+.nav-dropdown-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.nav-dropdown-toggle:hover {
+  color: #fff;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 140%;
+  min-width: 220px;
+  background: rgba(5, 7, 18, 0.97);
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  padding: 8px 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 30;
+}
+
+.nav-dropdown-menu a {
+  display: block;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.nav-dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ---- publications pages ---- */
+.publications-hero {
+  padding-top: 80px;
+  padding-bottom: 40px;
+  background: radial-gradient(circle at top, #101322, #060915);
+}
+
+.publications-hero h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.publications-hero p {
+  color: var(--text-muted);
+  max-width: 700px;
+}
+
+.pub-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 22px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.pub-filters select,
+.pub-filters input[type="search"] {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(8, 10, 24, 0.9);
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.pub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pub-year-group {
+  border-left: 2px solid rgba(244, 177, 36, 0.4);
+  padding-left: 16px;
+}
+
+.pub-year-heading {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.pub-item {
+  margin-bottom: 10px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pub-item--hidden {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.pub-item-title {
+  font-weight: 600;
+}
+
+.pub-item-outlet {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .pub-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
