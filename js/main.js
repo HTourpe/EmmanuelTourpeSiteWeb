@@ -1,6 +1,37 @@
 // ------------------------------------------------------
 // Utility functions
 // ------------------------------------------------------
+function initNavDropdown() {
+  const dropdowns = document.querySelectorAll('.nav-dropdown');
+
+  dropdowns.forEach(dd => {
+    const toggle = dd.querySelector('.nav-dropdown-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // close other open dropdowns
+      document.querySelectorAll('.nav-dropdown.open').forEach(other => {
+        if (other !== dd) other.classList.remove('open');
+      });
+      dd.classList.toggle('open');
+    });
+
+    // close when clicking a link inside
+    dd.querySelectorAll('.nav-dropdown-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        dd.classList.remove('open');
+      });
+    });
+  });
+
+  // click outside closes all dropdowns
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dropdown.open').forEach(dd => {
+      dd.classList.remove('open');
+    });
+  });
+}
 
 function parseCsvDate(dateStr) {
   if (!dateStr) return null;
@@ -265,7 +296,7 @@ function setupPageTransition() {
 document.addEventListener('DOMContentLoaded', () => {
   const yearSpan = document.getElementById('year-span');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-
+  initNavDropdown();        // new
   initBookCardObserver();
   setupPageTransition();
   loadBooks();
