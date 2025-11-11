@@ -132,7 +132,7 @@ function renderPublications() {
     container.appendChild(groupEl);
   });
 
-  populateYearFilter();
+  
 }
 
 function populateYearFilter() {
