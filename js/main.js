@@ -133,8 +133,13 @@ async function loadBooks() {
     });
 
     allBooks.sort((a, b) => {
-      return parseCsvDate(b.PublicationDate) - parseCsvDate(a.PublicationDate);
-    });
+  const da = parseCsvDate(a['Publication Date'] || a.PublicationDate);
+  const db = parseCsvDate(b['Publication Date'] || b.PublicationDate);
+  const ta = da ? da.getTime() : 0;
+  const tb = db ? db.getTime() : 0;
+  return tb - ta; // newest first
+});
+
 
     renderFeatured();
     renderGrid();
