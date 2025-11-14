@@ -35,23 +35,39 @@ function initNavDropdown() {
 
 function parseCsvDate(dateStr) {
   if (!dateStr) return null;
-  const parts = dateStr.split('/');
-  const m = parseInt(parts[0], 10);
-  const d = parseInt(parts[1], 10);
-  let y = parseInt(parts[2], 10);
-  if (y < 100) y = 2000 + y;
-  return new Date(y, m - 1, d);
+  const s = String(dateStr).trim();
+
+  // ISO: yyyy-mm-dd
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+  // US: mm/dd/yy or mm/dd/yyyy
+  const mdy = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/;
+
+  let y, m, d;
+
+  if (iso.test(s)) {
+    const mch = s.match(iso);
+    y = +mch[1]; m = +mch[2]; d = +mch[3];
+    return new Date(y, m - 1, d);
+  }
+
+  if (mdy.test(s)) {
+    const mch = s.match(mdy);
+    m = +mch[1]; d = +mch[2]; y = +mch[3];
+    if (y < 100) y = 2000 + y; // ‘24’ → 2024
+    return new Date(y, m - 1, d);
+  }
+
+  // Fallback to native parser (handles e.g. RFC 2822/ISO variants)
+  const t = Date.parse(s);
+  return isNaN(t) ? null : new Date(t);
 }
 
 function formatDateFr(dateStr) {
   const d = parseCsvDate(dateStr);
   if (!d || isNaN(d)) return '';
-  return d.toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  return d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
 }
+
 
 function truncate(text, n) {
   if (!text) return '';
