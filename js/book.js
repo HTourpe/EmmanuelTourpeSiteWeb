@@ -5,7 +5,7 @@ function parseCsvDate(dateStr) {
   // ISO: yyyy-mm-dd
   const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
   // US: mm/dd/yy or mm/dd/yyyy
-  const mdy = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/;
+  const mdy = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/;
 
   let y, m, d;
 
@@ -17,15 +17,24 @@ function parseCsvDate(dateStr) {
 
   if (mdy.test(s)) {
     const mch = s.match(mdy);
-    m = +mch[1]; d = +mch[2]; y = +mch[3];
-    if (y < 100) y = 2000 + y; // ‘24’ → 2024
+    m = +mch[1];
+    d = +mch[2];
+    y = +mch[3];
+
+    // handle 2-digit years
+    if (y < 100) {
+      if (y >= 70) y = 1900 + y; // 70–99 → 1970–1999
+      else y = 2000 + y;         // 00–69 → 2000–2069
+    }
+
     return new Date(y, m - 1, d);
   }
 
-  // Fallback to native parser (handles e.g. RFC 2822/ISO variants)
+  // fallback to native parse
   const t = Date.parse(s);
   return isNaN(t) ? null : new Date(t);
 }
+
 
 function formatDateFr(dateStr) {
   const d = parseCsvDate(dateStr);
