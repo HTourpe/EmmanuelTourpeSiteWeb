@@ -1,4 +1,4 @@
-# Réponses aux désinformations
+# Ce que n'est pas ma philosophie politique
 
 ## « Emmanuel Tourpe est un catho d’extrême droite »
 

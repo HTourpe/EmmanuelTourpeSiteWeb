@@ -1,7 +1,6 @@
 function renderMarkdownPage() {
   const markdownPath = window.MARKDOWN_PAGE_SOURCE;
   const content = document.getElementById('markdown-content');
-  const title = document.getElementById('page-title');
 
   if (!markdownPath || !content) return;
 
@@ -11,11 +10,6 @@ function renderMarkdownPage() {
       return response.text();
     })
     .then(markdown => {
-      const lines = markdown.split(/\r?\n/);
-      const headingLine = lines.find(line => /^#\s+/.test(line));
-      if (title && headingLine) {
-        title.textContent = headingLine.replace(/^#\s+/, '').trim();
-      }
       content.innerHTML = markdownToHtml(markdown);
     })
     .catch(error => {
