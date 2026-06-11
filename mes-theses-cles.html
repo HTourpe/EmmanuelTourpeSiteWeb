@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Mes thèses politiques clés – Emmanuel Tourpe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div id="page-transition" class="page-transition"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/index.html">Emmanuel Tourpe</a>
+      </div>
+      <nav class="main-nav">
+        <a href="/#about">À propos</a>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button">Publications <span class="nav-caret">▾</span></button>
+          <div class="nav-dropdown-menu">
+            <a href="/#featured">Livres récents</a>
+            <a href="/#catalog">Tous les livres</a>
+            <a href="/articles.html">Articles</a>
+            <a href="/etudes.html">Études critiques</a>
+            <a href="/recensions.html">Recensions et notices</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="publications-hero">
+    <div class="container">
+      <h1 id="page-title">Mes thèses politiques clés</h1>
+      <p>Une synthèse des thèses clés présentées dans l’espace public.</p>
+    </div>
+  </section>
+
+  <main class="section">
+    <div class="container prose-layout">
+      <article id="markdown-content" class="prose-content"></article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="year-span"></span> Emmanuel Tourpe</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/markdown-page.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const yearSpan = document.getElementById('year-span');
+      if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+    });
+  </script>
+</body>
+</html>
