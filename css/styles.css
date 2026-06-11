@@ -420,6 +420,32 @@ body {
   color: #444a63;
 }
 
+.about-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  margin-bottom: 14px;
+}
+
+.about-action-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #1a1307;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(244, 177, 36, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(244, 177, 36, 0.36);
+}
+
 /* ------------------------------------------------------
    Footer
    ------------------------------------------------------ */
@@ -579,6 +605,14 @@ body {
 
   .about-text {
     max-width: 100%;
+  }
+
+  .about-actions {
+    justify-content: center;
+  }
+
+  .about-action-btn {
+    width: min(100%, 340px);
   }
 
   .book-detail-layout {
