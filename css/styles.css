@@ -172,7 +172,7 @@ body {
 
 .hero-actions {
   display: grid;
-  grid-template-columns: repeat(2, max-content);
+  grid-template-columns: repeat(3, max-content);
   gap: 12px;
   margin-top: 14px;
   align-items: start;
